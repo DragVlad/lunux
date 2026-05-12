@@ -1,0 +1,47 @@
+require_relative '../lib/vagrant_common'
+
+begin
+  BOX_NAME = VagrantCommon.get_box_name
+  
+  # Профиль ресурсов
+  PROFILE = ENV.fetch('PROFILE', 'small') # tiny|small|medium|large|xlarge
+  
+  # Размер главного диска
+  DISK_SIZE = ENV.fetch('DISK_SIZE', '30GB')
+  
+  # Сетевая конфигурация
+  LAB_NET = ENV.fetch('LAB_NET', '192.168.250')
+  
+  # Конфигурация ВМ
+  NODES = [
+    { name: "cli-basics", ip: '.10' },
+  ]
+  PROFILE = VagrantCommon.adjust_profile_for_platform(PROFILE)
+  VagrantCommon.validate_profile(PROFILE)
+  VagrantCommon.validate_lab_net(LAB_NET)
+
+rescue => e
+  VagrantCommon.handle_config_error(e, PROFILE, LAB_NET)
+end
+
+Vagrant.configure('2') do |config|
+  VagrantCommon.configure_basic_settings(config, BOX_NAME)
+  VagrantCommon.configure_synced_folder(config)
+
+  VagrantCommon.configure_vbguest(config)
+
+  NODES.each_with_index do |node, idx|
+    config.vm.define node[:name] do |vm|
+      vm.vm.hostname = node[:name]
+
+      VagrantCommon.configure_network(vm, LAB_NET, node[:ip])
+      VagrantCommon.configure_provider(vm, PROFILE, node[:name])
+      VagrantCommon.configure_disk(vm, DISK_SIZE)
+
+      VagrantCommon.configure_provisioning(vm, PROFILE, LAB_NET, ENV.fetch('USE_RU_MIRRORS', 'false'))
+      
+      vm.vm.provision 'shell', inline: VagrantCommon.print_stand_info(PROFILE, LAB_NET, 'Основы командной строки Linux')
+    end
+  end
+end
+  
