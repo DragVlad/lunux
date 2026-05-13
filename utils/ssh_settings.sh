@@ -20,5 +20,3 @@ sudo systemctl restart sshd
 # включаем фаервол
 sudo ufw allow 31200/tcp
 sudo ufw enable
-
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFATJ0SNHrwBxietFbRkx3gw1GyfROzJ6aKEg+1DST9W maxhc@inbox.ru
