@@ -18,8 +18,3 @@ ssh-keygen -q -t Ed25519 -C "maxhc@inbox.ru" -f ./linux_base/test-key
 
 ssh root@82.146.60.224 -i .ssh/test-key
 ```
-
-Готовим конфиг для быстрого подключения:
-```bash
-
-```

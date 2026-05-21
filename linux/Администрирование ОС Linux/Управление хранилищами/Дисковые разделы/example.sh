@@ -1,14 +1,3 @@
-# Дисковые разделы
-
-```bash
-lsblk # вывод всех блочных устройств
-lsblk /dev/sdb
-mkfs._option # создание файловой системы
-mount disk # монтирование диска
-blkid # id и лейблы на файловых системах
-```
-
-```bash
 admin@ubuntu-server:~$ lsblk 
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
 sda      8:0    0   50G  0 disk 
@@ -31,9 +20,7 @@ sudo mkfs.ext4 /dev/sdc3
 sudo dd if=/dev/zero of=/dev/sdc bs=1M status=progress # очистка диска с помощью его перезаписи, юзаем ее
 sudo shred -v -n 1 /dev/sdc # очистка с помощью утилиты шред
 sudo wipefs --all /dev/sdc # удаляет информацию о разделе файловой системы
-```
 
-```bash
 # Пример для приложения
 sudo parted /dev/sdc mklabel msdos
 
@@ -92,7 +79,6 @@ sudo umount /dev/sdc3
 sudo mount -a
 
 # Теперь все ок!
-```bash
 # список UUID блочных устройств
 # гарантирует что в нужный диск, будет писать нужная инфа(если в ЦОДЕ переткнули порты для дисков)
 sudo blkid 
@@ -101,4 +87,3 @@ sudo blkid
 /dev/sdc3: UUID="0690af70-e58f-4eb7-824d-0c7cad582c35" BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="209c12fe-03"
 /dev/sdc1: UUID="728141e1-459b-4b53-9264-e0185d830ec4" BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="209c12fe-01"
 /dev/sda1: PARTUUID="3980fd61-8268-4a25-a80b-5175fd04ea8f"
-```

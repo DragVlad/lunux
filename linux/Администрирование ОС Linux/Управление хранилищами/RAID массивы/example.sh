@@ -1,6 +1,3 @@
-# RAID
-
-```bash
 sudo -s
 
 lsblk
@@ -35,4 +32,3 @@ mdadm --stop /dev/md0
 cat /proc/mdstat
 
 mdadm --zero-superblock /dev/sdc
-```
