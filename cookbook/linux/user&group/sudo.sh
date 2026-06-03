@@ -16,10 +16,10 @@ sudo -u dev_user sudo apt update
 
 # Настройка админа под apache2
 sudo apt install -y apache2
-sudo adduser web_admin
+sudo adduser web_admin # Добавление пользователя
 
 sudo visudo
-web_admin ALL=(ALL) NOPASSWD: /usr/sbin/service apache2 *
+web_admin ALL=(ALL) NOPASSWD: /usr/sbin/service apache2 * # 
 
 su - web_admin
 sudo service apache2 restart
