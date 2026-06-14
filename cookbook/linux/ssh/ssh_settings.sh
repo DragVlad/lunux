@@ -1,6 +1,6 @@
 # Базовая настройка сервера
 
-sudo apt update && sudo apt upgrade -y &
+sudo apt update && sudo apt upgrade -y
 sudo echo "localhost 127.0.0.1" > /etc/hosts
 sudo apt install openssh-server -y &
 sudo systemctl start ssh
