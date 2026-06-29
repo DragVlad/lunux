@@ -33,12 +33,13 @@
 
 ```mermaid
 graph LR
-    A[Untracked (Неотслеживаемый)] --> B[Staged (Подготовленный)]
-    B --> C[Committed (Закоммиченный)]
-    D[Unmodified (Неизмененный)] --> B
-    D --> E[Modified (Измененный)]
+    A[Untracked] --> B[Staged]
+    B --> C[Committed]
+    D[Unmodified] --> B
+    D --> E[Modified]
     E --> B
     C --> D
+
 ```
 
 1.  **Untracked (Неотслеживаемый):** Новый файл, который Git еще не отслеживает. Чтобы Git начал его отслеживать, его нужно добавить в индекс (staged).
