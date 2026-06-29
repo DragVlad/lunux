@@ -33,10 +33,10 @@
 
 ```mermaid
 graph LR
-    A[Untracked<br>(Неотслеживаемый)] --> B[Staged<br>(Подготовленный)]
-    B --> C[Commited<br>(Закоммиченный)]
-    D[Unmodified<br>(Неизмененный)] --> B
-    D --> E[Modified<br>(Измененный)]
+    A[Untracked (Неотслеживаемый)] --> B[Staged (Подготовленный)]
+    B --> C[Committed (Закоммиченный)]
+    D[Unmodified (Неизмененный)] --> B
+    D --> E[Modified (Измененный)]
     E --> B
     C --> D
 ```
