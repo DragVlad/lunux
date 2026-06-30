@@ -1,6 +1,6 @@
-# Управление пакетами в Linux
+# Управление пакетами в Debian/Ubuntu
 
-В Linux программное обеспечение поставляется в виде **пакетов**.
+В Linux программное обеспечение поставляется в виде **пакетов**. В семействе Debian используется формат `.deb` и пакетный менеджер **APT** (Advanced Package Tool).
 
 > **Пакет** — это архив, содержащий все необходимые файлы для установки программы: бинарные файлы, библиотеки, документацию и метаданные.
 >
@@ -8,100 +8,145 @@
 
 ---
 
-## Основные пакетные менеджеры
+## APT (Advanced Package Tool)
 
-| Менеджер | Дистрибутивы | Формат пакетов |
-|----------|--------------|----------------|
-| **APT** (Advanced Package Tool) | Debian, Ubuntu, Mint | `.deb` |
-| **YUM / DNF** | Fedora, RHEL, CentOS | `.rpm` |
+APT — основной пакетный менеджер в Debian, Ubuntu и их производных. Он работает поверх более низкоуровневых инструментов (`dpkg`) и управляет зависимостями, разрешая конфликты и автоматически загружая недостающие пакеты.
 
-> [!note]
-> DNF (Dandified YUM) — современная замена YUM в новых версиях Fedora и RHEL.
+### Команды APT
 
----
-
-## Сравнение команд: APT vs YUM/DNF
-
-| Задача | APT | YUM / DNF |
-|--------|-----|-----------|
-| Обновление списка пакетов | `sudo apt update` | `sudo yum update` / `sudo dnf update` |
-| Обновление всех пакетов | `sudo apt upgrade` | (то же самое, что выше) |
-| Установка пакета | `sudo apt install package_name` | `sudo yum install package_name` / `sudo dnf install package_name` |
-| Удаление пакета | `sudo apt remove package_name` | `sudo yum remove package_name` / `sudo dnf remove package_name` |
-| Поиск пакета | `apt search package_name` | `yum search package_name` / `dnf search package_name` |
-| Информация о пакете | `apt show package_name` | `yum info package_name` / `dnf info package_name` |
-| Удаление неиспользуемых пакетов | `sudo apt autoremove` | — |
+| Задача | Команда |
+|--------|---------|
+| Обновление списка пакетов из репозиториев | `sudo apt update` |
+| Обновление установленных пакетов до новых версий | `sudo apt upgrade` |
+| Полное обновление системы (с удалением/установкой зависимостей) | `sudo apt full-upgrade` |
+| Установка пакета | `sudo apt install package_name` |
+| Удаление пакета (конфигурационные файлы сохраняются) | `sudo apt remove package_name` |
+| Полное удаление пакета (вместе с конфигурацией) | `sudo apt purge package_name` |
+| Поиск пакета | `apt search package_name` |
+| Информация о пакете | `apt show package_name` |
+| Список установленных пакетов | `apt list --installed` |
+| Удаление неиспользуемых пакетов-зависимостей | `sudo apt autoremove` |
+| Очистка локального кэша пакетов (`/var/cache/apt/archives/`) | `sudo apt clean` |
+| Очистка устаревших пакетов в кэше | `sudo apt autoclean` |
 
 ---
 
-## Репозитории
+## dpkg — низкоуровневый менеджер пакетов
 
-Пакетные менеджеры работают с **репозиториями** — серверами, хранящими пакеты и метаданные. Репозитории бывают:
+`dpkg` — инструмент, непосредственно работающий с `.deb`-пакетами. В отличие от APT, он не разрешает зависимости автоматически.
 
-- **Официальные** — поддерживаются разработчиками дистрибутива
-- **Неофициальные** — созданы сообществом или сторонними организациями
+### Основные команды dpkg
 
-### Репозитории в APT
+| Задача | Команда |
+|--------|---------|
+| Установка пакета из `.deb`-файла | `sudo dpkg -i package_name.deb` |
+| Удаление пакета (конфигурация сохраняется) | `sudo dpkg -r package_name` |
+| Полное удаление пакета | `sudo dpkg -P package_name` |
+| Список файлов в пакете | `dpkg -c package_name.deb` |
+| Информация о пакете | `dpkg -I package_name.deb` |
+| Проверка состояния пакета | `dpkg -s package_name` |
+| Список всех установленных пакетов | `dpkg -l` |
+| Принудительная установка (игнорирование ошибок) | `sudo dpkg --force-all -i package_name.deb` |
 
-Указываются в:
-- `/etc/apt/sources.list`
-- Файлах внутри `/etc/apt/sources.list.d/`
+### Исправление зависимостей после установки через dpkg
+
+При установке через `dpkg` зависимости не устанавливаются автоматически. Для их доустановки используется APT:
+
+```bash
+sudo apt install -f
+```
+
+**Пример полного цикла ручной установки:**
+
+```bash
+# Скачивание пакета
+wget https://example.com/package.deb
+
+# Установка через dpkg
+sudo dpkg -i package.deb
+
+# Исправление зависимостей
+sudo apt install -f
+```
+
+---
+
+## Репозитории APT
+
+APT получает пакеты из **репозиториев** — серверов, хранящих пакеты и метаданные.
+
+### Файлы конфигурации репозиториев
+
+- `/etc/apt/sources.list` — основной файл
+- `/etc/apt/sources.list.d/*.list` — дополнительные файлы
 
 **Пример строки репозитория:**
+
 ```bash
-deb http://archive.ubuntu.com/ubuntu/ focal main restricted
+deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse
 ```
 
 | Элемент | Значение |
 |---------|----------|
 | `deb` | Бинарные пакеты (deb-src — исходные коды) |
 | `http://...` | URL репозитория |
-| `focal` | Кодовое имя релиза (Ubuntu 20.04) |
-| `main`, `restricted` | Разделы репозитория |
+| `jammy` | Кодовое имя релиза (Ubuntu 22.04) |
+| `main`, `restricted` | Разделы репозитория (компоненты) |
 
-### Репозитории в YUM/DNF
+### Компоненты репозиториев Ubuntu
 
-Указываются в файлах `.repo` внутри `/etc/yum.repos.d/`
+| Компонент | Описание |
+|-----------|----------|
+| **main** | Официально поддерживаемое ПО |
+| **restricted** | ПО с ограниченной лицензией (например, драйверы) |
+| **universe** | ПО, поддерживаемое сообществом |
+| **multiverse** | ПО с ограничениями по авторскому праву |
 
-**Пример файла .repo:**
-```ini
-[base]
-name=CentOS-$releasever - Base
-baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+### Обновление списка пакетов
+
+После изменения файлов репозиториев необходимо обновить локальный кэш:
+
+```bash
+sudo apt update
 ```
-
-| Элемент | Значение |
-|---------|----------|
-| `[base]` | Имя репозитория |
-| `name` | Человеко-читаемое имя |
-| `baseurl` | URL репозитория |
-| `gpgcheck` | Проверка подписи (1 — включена) |
-| `gpgkey` | Путь к GPG-ключу |
 
 ---
 
 ## GPG-подпись репозиториев
 
-Для безопасности и целостности пакетов используется **цифровая подпись с помощью GPG-ключей**. Ключи хранятся в системе и проверяют, что пакеты подписаны доверенным источником и не были изменены.
+Для проверки целостности и подлинности пакетов используется **цифровая подпись с помощью GPG-ключей**.
+
+### Управление ключами
+
+| Задача | Команда |
+|--------|---------|
+| Просмотр установленных ключей | `apt-key list` |
+| Добавление ключа с сервера | `sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys KEY_ID` |
+| Добавление ключа из файла | `sudo apt-key add keyfile.gpg` |
+| Удаление ключа | `sudo apt-key del KEY_ID` |
+
+> [!note]
+> В новых версиях Ubuntu (22.04+) `apt-key` объявлен устаревшим. Рекомендуется использовать `/etc/apt/trusted.gpg.d/` для хранения ключей.
 
 ---
 
-## Работа с PPA в Ubuntu (Personal Package Archive)
+## PPA (Personal Package Archive)
 
 > **PPA** — личные архивы пакетов на сервисе Launchpad. Позволяют получать ПО, не входящее в официальные репозитории.
 
+### Управление PPA
+
 | Действие | Команда |
 |----------|---------|
-| Добавление PPA | `sudo add-apt-repository ppa:graphics-drivers/ppa`<br>`sudo apt update` |
-| Удаление PPA | `sudo add-apt-repository --remove ppa:graphics-drivers/ppa`<br>`sudo apt update` |
+| Добавление PPA | `sudo add-apt-repository ppa:graphics-drivers/ppa` |
+| Удаление PPA | `sudo add-apt-repository --remove ppa:graphics-drivers/ppa` |
+| Обновление после добавления PPA | `sudo apt update` |
 
 ### Ручное добавление PPA
 
 ```bash
 # Добавление репозитория
-echo "deb http://ppa.launchpad.net/graphics-drivers/ppa/ubuntu focal main" | sudo tee /etc/apt/sources.list.d/graphics-drivers-ppa.list
+echo "deb http://ppa.launchpad.net/graphics-drivers/ppa/ubuntu jammy main" | sudo tee /etc/apt/sources.list.d/graphics-drivers-ppa.list
 
 # Добавление GPG-ключа
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABCDEFGH12345678
@@ -114,11 +159,11 @@ sudo apt update
 
 ## Добавление сторонних репозиториев
 
-### APT (на примере Nginx)
+На примере добавления репозитория Nginx:
 
 ```bash
 # Добавление репозитория
-echo "deb http://nginx.org/packages/ubuntu/ focal nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
+echo "deb http://nginx.org/packages/ubuntu/ jammy nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
 
 # Добавление GPG-ключа
 wget -qO - https://nginx.org/keys/nginx_signing.key | sudo apt-key add -
@@ -128,45 +173,147 @@ sudo apt update
 sudo apt install nginx
 ```
 
-### YUM/DNF (на примере Nginx)
-
-Создайте файл `/etc/yum.repos.d/nginx.repo`:
-
-```ini
-[nginx-stable]
-name=nginx stable repo
-baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
-gpgcheck=1
-enabled=1
-gpgkey=https://nginx.org/keys/nginx_signing.key
-```
-
-```bash
-# Импорт ключа
-sudo rpm --import https://nginx.org/keys/nginx_signing.key
-
-# Установка
-sudo yum update    # или dnf update
-sudo yum install nginx    # или dnf install nginx
-```
-
 ---
 
 ## Удаление репозитория
 
-| Система | Действие |
-|---------|----------|
-| **APT** | Удалить строку из `/etc/apt/sources.list` или файл из `/etc/apt/sources.list.d/` |
-| **YUM/DNF** | Удалить `.repo`-файл из `/etc/yum.repos.d/` |
+Для удаления репозитория необходимо:
+
+1. Удалить файл из `/etc/apt/sources.list.d/` или закомментировать строку в `/etc/apt/sources.list`
+2. Обновить список пакетов: `sudo apt update`
+
+```bash
+sudo rm /etc/apt/sources.list.d/nginx.list
+sudo apt update
+```
+
+---
+
+## Ручная установка .deb-пакетов
+
+Если пакет отсутствует в репозиториях или требуется конкретная версия, его можно установить вручную из `.deb`-файла.
+
+### Установка через dpkg
+
+```bash
+sudo dpkg -i package_name.deb
+```
+
+### Исправление зависимостей
+
+Если `dpkg` сообщает о неудовлетворённых зависимостях:
+
+```bash
+sudo apt install -f
+```
+
+### Пример: установка Google Chrome
+
+```bash
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+sudo apt install -f   # установка зависимостей
+```
+
+### Просмотр содержимого .deb-пакета
+
+```bash
+dpkg -c package_name.deb          # список файлов в пакете
+dpkg -I package_name.deb          # информация о пакете
+```
+
+### Удаление пакета, установленного через dpkg
+
+```bash
+sudo dpkg -r package_name
+sudo dpkg -P package_name          # полное удаление с конфигурацией
+```
+
+---
+
+## Установка из исходных кодов
+
+Некоторые программы не поставляются в виде пакетов и требуют сборки из исходных кодов.
+
+**Стандартная процедура:**
+
+```bash
+tar -xzf software.tar.gz
+cd software
+./configure
+make
+sudo make install
+```
+
+| Команда | Назначение |
+|---------|------------|
+| `tar -xzf` | Распаковка архива |
+| `./configure` | Проверка зависимостей и создание Makefile |
+| `make` | Компиляция программы |
+| `sudo make install` | Копирование файлов в системные директории |
+
+> [!warning]
+> Установка из исходных кодов не отслеживается пакетным менеджером. Это может привести к конфликтам при обновлении системы. Предпочтительнее использовать официальные репозитории или создавать собственные пакеты.
+
+---
+
+## Установка через менеджеры языков программирования
+
+Некоторые языки имеют собственные менеджеры пакетов:
+
+| Язык | Менеджер | Пример установки |
+|------|----------|------------------|
+| Python | pip | `pip install package_name` |
+| Node.js | npm | `npm install -g package_name` |
+| Ruby | gem | `gem install package_name` |
+| Go | go | `go get package_name` |
+
+Эти менеджеры устанавливают пакеты в изолированные директории и не влияют на системный пакетный менеджер.
+
+---
+
+## Разрешение проблем с зависимостями
+
+При возникновении ошибок с зависимостями используются команды:
+
+```bash
+sudo apt install -f              # исправление зависимостей
+sudo apt --fix-broken install    # аналогично
+sudo apt --fix-missing           # загрузка недостающих пакетов
+```
+
+---
+
+## Обновление системы
+
+| Тип обновления | Команда |
+|----------------|---------|
+| Стандартное обновление пакетов | `sudo apt update && sudo apt upgrade` |
+| Полное обновление с разрешением зависимостей | `sudo apt update && sudo apt full-upgrade` |
+| Обновление до новой версии дистрибутива | `sudo do-release-upgrade` |
+
+**Различия между `upgrade` и `full-upgrade`:**
+- `upgrade` — обновляет пакеты, не удаляя и не устанавливая новые зависимости.
+- `full-upgrade` — более агрессивное обновление, может удалять и устанавливать пакеты для разрешения зависимостей.
 
 ---
 
 ## Итог
 
-Пакетные менеджеры — основа управления ПО в Linux. Понимание различий между APT и YUM/DNF необходимо для работы с разными семействами дистрибутивов.
+APT — основа управления ПО в Debian/Ubuntu. Понимание его работы, а также умение устанавливать пакеты вручную через `dpkg` или из исходных кодов необходимо для эффективного администрирования.
 
 > [!tip]
-> Независимо от менеджера, перед установкой пакетов из сторонних репозиториев всегда проверяйте:
+> Перед установкой пакетов из сторонних репозиториев всегда проверяйте:
 > 1. Корректность URL репозитория
 > 2. Наличие и подлинность GPG-ключа
 > 3. Совместимость с версией вашего дистрибутива
+
+### Рекомендации по выбору способа установки
+
+| Способ установки | Когда использовать |
+|------------------|---------------------|
+| Репозитории дистрибутива | По умолчанию — безопасно, автоматически обновляется |
+| PPA (Ubuntu) | Если нужна свежая версия, которой нет в официальных репозиториях |
+| Ручная установка `.deb` | Если пакета нет в репозиториях, но есть готовый бинарный пакет |
+| Установка из исходных кодов | Если нет готового пакета и требуется специфическая сборка |
+| Менеджеры пакетов языков программирования | Для зависимостей конкретного языка (Python, Node.js и т.д.) |
