@@ -1,0 +1,121 @@
+📁 java
+├── 📁 01. Введение в экосистему Java
+│   ├── 📁 01. Что такое Java: история, версии, LTS (8, 11, 17, 21)
+│   │   └── 📄 README.md
+│   ├── 📁 02. JVM, JRE, JDK — архитектура
+│   │   └── 📄 README.md
+│   └── 📁 03. Компиляция, байт-код, интерпретация
+│       └── 📄 README.md
+│
+├── 📁 02. Синтаксис и основы языка
+│   ├── 📁 01. Переменные, примитивы, ссылочные типы
+│   │   └── 📄 README.md
+│   ├── 📁 02. Операторы (арифметические, логические, битовые)
+│   │   └── 📄 README.md
+│   ├── 📁 03. Управляющие конструкции (if, switch, for, while)
+│   │   └── 📄 README.md
+│   ├── 📁 04. Массивы, String, StringBuilder, StringBuffer
+│   │   └── 📄 README.md
+│   ├── 📁 05. Ввод-вывод (Scanner, Console)
+│   │   └── 📄 README.md
+│   └── 📁 06. Методы, перегрузка, рекурсия
+│       └── 📄 README.md
+│
+├── 📁 03. Объектно-ориентированное программирование (ООП)
+│   ├── 📁 01. Классы, объекты, конструкторы
+│   │   └── 📄 README.md
+│   ├── 📁 02. Наследование и полиморфизм
+│   │   └── 📄 README.md
+│   ├── 📁 03. Инкапсуляция, модификаторы доступа
+│   │   └── 📄 README.md
+│   ├── 📁 04. Абстрактные классы и интерфейсы
+│   │   └── 📄 README.md
+│   ├── 📁 05. Внутренние, локальные, анонимные классы
+│   │   └── 📄 README.md
+│   └── 📁 06. Static члены и блоки инициализации
+│       ├── 📄 Examples.java
+│       └── 📄 README.md
+│
+├── 📁 04. Продвинутые возможности языка
+│   ├── 📁 01. Исключения (Checked/Unchecked, try-catch-finally, try-with-resources)
+│   │   └── 📄 README.md
+│   ├── 📁 02. Generics (типы, wildcards, PECS)
+│   │   └── 📄 README.md
+│   ├── 📁 03. Коллекции (List, Set, Map, Queue)
+│   │   └── 📄 README.md
+│   ├── 📁 04. Enum (перечисления)
+│   │   └── 📄 README.md
+│   ├── 📁 05. Аннотации (кастомные, Retention, Target)
+│   │   └── 📄 README.md
+│   └── 📁 06. Java 9–23: Records, Pattern Matching, Sealed Classes, Text Blocks
+│       ├── 📄 Examples.java
+│       └── 📄 README.md
+│
+├── 📁 05. JVM: Внутреннее устройство и память
+│   ├── 📁 01. Архитектура JVM (ClassLoader, Runtime Data Areas, Execution Engine)
+│   │   ├── 📄 JVM-Architecture.md
+│   │   └── 📄 README.md
+│   ├── 📁 02. Модель памяти: Heap, Stack, Metaspace
+│   │   ├── 📄 Memory-Model.md
+│   │   └── 📄 README.md
+│   ├── 📁 03. ClassLoader и родительская делегация
+│   │   ├── 📄 ClassLoader.md
+│   │   └── 📄 README.md
+│   ├── 📁 04. Байт-код и JIT-компиляция
+│   │   ├── 📄 Bytecode-JIT.md
+│   │   └── 📄 README.md
+│   └── 📁 05. Сборка мусора: G1, ZGC, Shenandoah
+│       ├── 📄 Garbage-Collection.md
+│       └── 📄 README.md
+│
+├── 📁 06. Многопоточность и Concurrency
+│   ├── 📁 01. Thread, Runnable, Callable
+│   │   └── 📄 README.md
+│   ├── 📁 02. Синхронизация: synchronized, volatile, Lock
+│   │   └── 📄 README.md
+│   ├── 📁 03. Проблемы: deadlock, race condition, visibility
+│   │   └── 📄 README.md
+│   ├── 📁 04. Concurrent Collections
+│   │   └── 📄 README.md
+│   ├── 📁 05. Executors и пулы потоков
+│   │   └── 📄 README.md
+│   ├── 📁 06. CompletableFuture
+│   │   └── 📄 README.md
+│   └── 📁 07. 🔥 Virtual Threads (Project Loom) — Java 21
+│       ├── 📄 Examples.java
+│       └── 📄 README.md
+│
+├── 📁 07. Ввод-вывод (I/O) и NIO
+│   ├── 📁 01. Работа с файлами (FileInputStream/FileOutputStream)
+│   │   └── 📄 README.md
+│   ├── 📁 02. Reader/Writer, BufferedReader
+│   │   └── 📄 README.md
+│   ├── 📁 03. Сериализация (Serializable, Externalizable)
+│   │   └── 📄 README.md
+│   └── 📁 04. NIO (Buffer, Channel, Path, Files, WatchService)
+│       ├── 📄 Examples.java
+│       └── 📄 README.md
+│
+├── 📁 08. Функциональное программирование и Stream API
+│   ├── 📁 01. Лямбда-выражения
+│   │   └── 📄 README.md
+│   ├── 📁 02. Функциональные интерфейсы (Predicate, Function, Consumer, Supplier)
+│   │   └── 📄 README.md
+│   ├── 📁 03. Stream API (промежуточные и терминальные операции)
+│   │   └── 📄 README.md
+│   ├── 📁 04. Optional
+│   │   └── 📄 README.md
+│   └── 📁 05. Method References и Constructor References
+│       ├── 📄 Examples.java
+│       └── 📄 README.md
+│
+├── 📁 09. Работа с датой и временем (Java 8+)
+│   ├── 📁 01. LocalDate, LocalTime, LocalDateTime
+│   │   └── 📄 README.md
+│   ├── 📁 02. ZonedDateTime, ZoneId
+│   │   └── 📄 README.md
+│   ├── 📁 03. Period, Duration, Instant
+│   │   └── 📄 README.md
+│   └── 📁 04. DateTimeFormatter
+│       ├── 📄 Examples.java
+│       └── 📄 README.md
