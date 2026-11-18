@@ -249,6 +249,13 @@ bg %1                           # Возобновить фоновую зада
 nice -n 10 command              # Запуск с низким приоритетом
 renice +5 -p PID                # Понизить приоритет существующего
 
+# просмотр зависимости юнита
+systemctl list-dependencies <unit>              # Дерево зависимостей (по умолчанию — что нужно ДЛЯ запуска)
+systemctl list-dependencies <unit> --reverse    # Обратные зависимости (кто зависит ОТ этого юнита)
+systemctl list-dependencies <unit> --all        # Все зависимости, включая неактивные
+systemctl list-dependencies <unit> --before     # Что запускается до юнита (ordering)
+systemctl list-dependencies <unit> --after      # Что запускается после юнита (ordering)
+
 # systemd - просмотр юнитов
 systemctl list-units            # Все активные юниты
 systemctl list-units --all      # Все юниты (включая неактивные)
